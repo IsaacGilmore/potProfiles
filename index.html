@@ -16,10 +16,24 @@
 <body>
     <div class="container-fluid">
         <div class="row">
+            <div class="col">
+
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-6">
+                <h1 class="text-center">Tool Tool</h1>
+                <p>move the handles around to form the curve of your rib. The left half of the screen shows the corresponding "pot" that is created. Adjust parameters like number of points, toggle bezier curves or straight vertices, or reset. When you're finished, hit the "Copy Data" button to copy your rib informaiton.</p>
+            </div>
+        </div>
+        <div class="row">
+            <div class="alert alert-success" role="alert" id="copyAlert" style="display: none;">
+                Copied!
+            </div>
             <div class="col-6 bg-light">
                 <h6>Options</h6>
-                <label for="pointsSlider" >Number of Points (between 2 and 10):</label>
-                <input type="range" class="form-range w-25" id="pointsSlider" min="2" max="10" step="1">
+                <label for="pointsSlider" >Number of Vertices (between 2 and 10):</label>
+                <input type="range" class="form-range w-80" id="pointsSlider" min="2" max="10" step="1">
                 <br>
                 <input type="checkbox" class="form-check-input" id="toggleBezier" checked>
                 <label for="toggleBezier">Bezier Curves</label>
@@ -27,23 +41,19 @@
                 <button type="button" class="btn btn-outline-primary btn-sm mt-2" onclick="canvasApp()">Reset</button>
             </div> 
             <div class="col-6 bg-light pb-2">
-                <h6>Coordinates</h6>
-                <textarea class="form-control mt-2 mb-2" id="outputText"></textarea>
+                <!-- <h6>Coordinates</h6>
+                <textarea class="form-control mt-2 mb-2" id="outputText"></textarea> -->
                 <button type="button" class="btn btn-outline-primary btn-sm" onclick="copyToClipboard()">Copy Data</button>
+
             </div>
         </div>
         <div class="row mt-3">
             <div class="col-md-6 order-md-2 p-0">
-                <canvas id="canvasOne" class="canvasStyle" width=""></canvas>
+                <canvas id="canvasOne" class="canvasStyle"></canvas>
             </div>
-            <div class="col-md-6 order-md-1 p-2">
+            <div class="col-md-6 order-md-1 p-0">
                 <canvas id="canvasPot" class="canvasStyle"></canvas>
             </div>
-
-
-        </div>
-        <div class="row">
-
 
 
         </div>
@@ -81,12 +91,21 @@ function canvasApp() {
         // this is cheesy, but seems to work;
         // issue with the reset of canvas causing the window to
         // continually scale, somehting about innerWidth vs an abs value
-        
-        theCanvas.width = innerWidth;
+        if (innerWidth > 767) {
+            theCanvas.width = innerWidth/3.2;
+            potCanvas.width = innerWidth/3.2;
+        } else {
+            theCanvas.width = innerWidth;
+
+            potCanvas.width = innerWidth;
+        }
         theCanvas.height = theCanvas.width * 1.5;
-        potCanvas.width = innerWidth;
         potCanvas.height = potCanvas.width * 1.5;
+
         firstLoad = false;
+
+        
+
 
     }
 
@@ -109,14 +128,6 @@ function canvasApp() {
             })
         }
 
-        // point = {
-        //     cp1: { x: 150, y: 75 },
-        //             cp2: { x: 300, y: 100 },
-        //             cp2a: { x: 300, y: 250 },
-        //             cp3: { x: 160, y: 220 },
-        //             cp3a: { x: 160, y: 280 },
-        //             cp4: { x: 150, y: 300 }
-        // };
         style = {
             curve: {
                 width: 6,
@@ -132,7 +143,7 @@ function canvasApp() {
                 color: '#cfbc95'
             },
             point: {
-                radius: 10,
+                radius: 14,
                 width: 2,
                 color: '#900',
                 fill: 'rgba(200, 200, 200, .5)',
@@ -140,7 +151,7 @@ function canvasApp() {
                 arc2: 2 * Math.PI
             },
             controlPoint: {
-                radius: 10,
+                radius: 14,
                 width: 2,
                 color: '#009',
                 fill: 'rgba(200, 200, 200, .5)',
@@ -216,7 +227,7 @@ function canvasApp() {
         ctx.strokeStyle = style.curve.color;
 
         ctx.beginPath();
-        ctx.moveTo(theCanvas.width * .75, points[0].y);
+        ctx.moveTo(theCanvas.width * .90, points[0].y);
         ctx.lineTo(points[0].x, points[0].y);
         ctx.moveTo(points[0].x, points[0].y);
         
@@ -230,9 +241,9 @@ function canvasApp() {
         }
     }
         ctx.moveTo(points[points.length-1].x, points[points.length-1].y);
-        ctx.lineTo(theCanvas.width * .75, points[points.length-1].y);
-        ctx.moveTo(theCanvas.width * .75, points[points.length-1].y);
-        ctx.lineTo(theCanvas.width * .75, points[0].y);
+        ctx.lineTo(theCanvas.width * .90, points[points.length-1].y);
+        ctx.moveTo(theCanvas.width * .90, points[points.length-1].y);
+        ctx.lineTo(theCanvas.width * .90, points[0].y);
         ctx.stroke();
         
                 
@@ -257,7 +268,7 @@ function canvasApp() {
         ctxPot.fillStyle = style.pot.color;
         ctxPot.save();
         ctxPot.scale(-1,1);
-        ctxPot.translate(-potCanvas.width/2.5, 0);
+        ctxPot.translate(-potCanvas.width/2.1, 0);
         ctxPot.beginPath();
 
 
@@ -279,7 +290,7 @@ function canvasApp() {
         ctxPot.restore();
 
         ctxPot.save();
-        ctxPot.translate(potCanvas.width/1.7, 0);
+        ctxPot.translate(potCanvas.width/1.9, 0);
         ctxPot.beginPath();
 
 
@@ -305,7 +316,6 @@ function canvasApp() {
     };
     // event parser
     function MousePos(event) {
-        console.log(event);
         event = event ? event : window.event;
         if (event.type == 'touchstart' || event.type == 'touchmove' || event.type == 'touchend' || event.type == 'touchcancel') {
             return {
@@ -360,8 +370,15 @@ function canvasApp() {
 
             e = MousePos(e);
                     if (drag.type === 'point') {
+                        console.log(points[drag.index].x)
+                        if (e.x < 50) {
+                            e.x = 50;
 
-                        points[drag.index].x = e.x;
+                        } else if (e.x > 175) {
+                            e.x = 175;
+                        } else {
+                            points[drag.index].x = e.x;
+                        }
                         if (drag.index == 0 || drag.index == points.length-1) {
                         } else {
                             points[drag.index].y = e.y;
@@ -390,6 +407,10 @@ function canvasApp() {
 }
     
 function copyToClipboard() {
+    let alert = document.getElementById("copyAlert");
+    if (alert.style.display === "none") {
+        alert.style.display = "block";
+    }
     if (isBezier) {
         navigator.clipboard.writeText("[" + JSON.stringify(points)+","+JSON.stringify(controlPoints) + "]");
     } else {

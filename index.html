@@ -16,23 +16,6 @@
 <body>
     <div class="container-fluid">
         <div class="row">
-            <div class="col">
-
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-12">
-                <h1 class="text-center">Rib Profiler</h1>
-                <p>move the handles around to form the curve of your rib. The left half of 
-                    the screen shows the corresponding "pot" that is created. Adjust parameters like number of points, 
-                    toggle bezier curves or straight vertices, or reset. 
-                    Toggle between bezier curves and normal vertices with the bezier curves checkbox. 
-                    When you're finished, 
-                    hit the "Copy Data" button to copy your rib information.
-                </p>
-            </div>
-        </div>
-        <div class="row">
             <div class="alert alert-success" role="alert" id="copyAlert" style="display: none;">
                 Copied!
             </div>
@@ -50,9 +33,6 @@
                 <!-- <h6>Coordinates</h6>
                 <textarea class="form-control mt-2 mb-2" id="outputText"></textarea> -->
                 <button type="button" class="btn btn-outline-primary btn-sm mt-4" onclick="copyToClipboard()">Copy Data</button>
-
-
-
             </div>
         </div>
         <div class="row mt-3">
@@ -62,8 +42,6 @@
             <div class="col-md-6 order-md-1 p-0">
                 <canvas id="canvasPot" class="canvasStyle"></canvas>
             </div>
-
-
         </div>
     </div>
 
@@ -111,10 +89,6 @@ function canvasApp() {
         potCanvas.height = potCanvas.width * 1.5;
 
         firstLoad = false;
-
-        
-
-
     }
 
 
@@ -314,7 +288,6 @@ function canvasApp() {
             }
         }
         ctxPot.lineTo(-20, points[points.length-1].y);
-        // ctxPot.closePath();
         ctxPot.fill();
         ctxPot.stroke();
         ctxPot.restore();
@@ -378,7 +351,6 @@ function canvasApp() {
 
             e = MousePos(e);
                     if (drag.type === 'point') {
-                        console.log(points[drag.index].x)
                         if (e.x < 50) {
                             e.x = 50;
 
